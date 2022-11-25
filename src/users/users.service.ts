@@ -84,16 +84,17 @@ export class UsersService {
   ): Promise<IUser | UnauthorizedException> {
     const usercheck: IUser[] | [] = await this.verifyIdAndReturnUser(id);
 
-    switch (usercheck.length > 0) {
-      case true && (user.isAdmin === true || usercheck[0].id === user.id):
-        const userRemoved: IUser = await this.prisma.users.delete({
-          where: { id },
-          select: this.userSelect,
-        });
-        return userRemoved;
-
-      case false || user.isAdmin === false || usercheck[0].id !== user.id:
-        return new UnauthorizedException('not authorized');
+    if (
+      usercheck.length > 0 &&
+      (user.isAdmin === true || usercheck[0].id === user.id)
+    ) {
+      const userRemoved: IUser = await this.prisma.users.delete({
+        where: { id },
+        select: this.userSelect,
+      });
+      return userRemoved;
+    } else {
+      return new UnauthorizedException('not authorized');
     }
   }
 }
