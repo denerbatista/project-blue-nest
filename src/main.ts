@@ -7,9 +7,13 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
 
-  const server: Server = await app.listen(port, () =>
-    console.log(`Application running on port ${port}`),
-  );
+  const server: Server = await app.listen(port, () => {
+    console.log(
+      `Application running on ${
+        port === 3000 ? `http://localhost:${port}` : `port ${port}`
+      }`,
+    );
+  });
 
   process.on('SIGINT', () => {
     server.close();
