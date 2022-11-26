@@ -11,7 +11,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUser } from './entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -37,7 +39,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Body() user: IUser) {
-    return this.usersService.remove(id, user);
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
   }
 }

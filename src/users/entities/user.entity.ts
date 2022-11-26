@@ -1,5 +1,5 @@
-import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
-export interface IUser extends CreateUserDto {
+export interface IUser extends UpdateUserDto {
   id: string;
 }

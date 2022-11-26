@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUser } from 'src/users/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +13,6 @@ export class UsersService {
     id: true,
     email: true,
     name: true,
-    password: true,
     cpf: true,
     isAdmin: true,
   };
@@ -42,7 +41,16 @@ export class UsersService {
       isAdmin: userCheckAdmin.isAdmin ? createUserDto.isAdmin : false,
     };
 
-    return this.prisma.users.create({ data, select: this.userSelect }).catch();
+    const newUser = await this.prisma.users
+      .create({ data, select: this.userSelect })
+      .catch();
+
+    return {
+      data: { ...newUser },
+      message: userCheckAdmin.isAdmin
+        ? 'Usuário criado como Admin: ' + createUserDto.isAdmin
+        : 'Você não tem autorização para criar usuário Admin',
+    };
   }
 
   async verifyIdAndReturnUser(id: string): Promise<IUser[] | []> {
@@ -78,23 +86,11 @@ export class UsersService {
       .catch();
   }
 
-  async remove(
-    id: string,
-    user: IUser,
-  ): Promise<IUser | UnauthorizedException> {
-    const usercheck: IUser[] | [] = await this.verifyIdAndReturnUser(id);
-
-    if (
-      usercheck.length > 0 &&
-      (user.isAdmin === true || usercheck[0].id === user.id)
-    ) {
-      const userRemoved: IUser = await this.prisma.users.delete({
-        where: { id },
-        select: this.userSelect,
-      });
-      return userRemoved;
-    } else {
-      return new UnauthorizedException('not authorized');
-    }
+  async remove(id: string): Promise<IUser> {
+    const userRemoved: IUser = await this.prisma.users.delete({
+      where: { id },
+      select: this.userSelect,
+    });
+    return userRemoved;
   }
 }
