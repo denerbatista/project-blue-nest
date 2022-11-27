@@ -17,20 +17,7 @@ export class UsersService {
     isAdmin: true,
   };
 
-  async create(createUserDto: CreateUserDto, id?: string) {
-    const userCheckAdmin: {
-      isAdmin: boolean;
-    } = id
-      ? await this.prisma.users.findUnique({
-          where: { id },
-          select: {
-            isAdmin: true,
-          },
-        })
-      : {
-          isAdmin: false,
-        };
-
+  async create(createUserDto: CreateUserDto): Promise<IUser> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 8);
 
     const data: CreateUserDto = {
@@ -38,27 +25,21 @@ export class UsersService {
       email: createUserDto.email,
       password: hashedPassword,
       cpf: createUserDto.cpf,
-      isAdmin: userCheckAdmin.isAdmin ? createUserDto.isAdmin : false,
+      isAdmin: createUserDto.isAdmin,
     };
 
-    const newUser = await this.prisma.users
-      .create({ data, select: this.userSelect })
-      .catch();
+    const newUser: IUser = await this.prisma.users.create({
+      data,
+      select: this.userSelect,
+    });
 
-    return {
-      data: { ...newUser },
-      message: userCheckAdmin.isAdmin
-        ? 'Usuário criado como Admin: ' + createUserDto.isAdmin
-        : 'Você não tem autorização para criar usuário Admin',
-    };
+    return newUser;
   }
 
   async verifyIdAndReturnUser(id: string): Promise<IUser[] | []> {
     const user: IUser = await this.prisma.users.findUnique({
       where: { id },
-      select: {
-        ...this.userSelect,
-      },
+      select: this.userSelect,
     });
 
     return !user ? [] : [user];
@@ -66,24 +47,17 @@ export class UsersService {
 
   async findAll(): Promise<IUser[]> {
     const response: IUser[] = await this.prisma.users.findMany({
-      select: this.userSelect,
+      select: { ...this.userSelect },
     });
-
     return response;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
-  }
-
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return await this.prisma.users
-      .update({
-        where: { id },
-        data: updateUserDto,
-        select: this.userSelect,
-      })
-      .catch();
+    return await this.prisma.users.update({
+      where: { id },
+      data: updateUserDto,
+      select: this.userSelect,
+    });
   }
 
   async remove(id: string): Promise<IUser> {
