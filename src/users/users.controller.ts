@@ -26,7 +26,7 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      res.send(await this.usersService.create(createUserDto));
+      res.status(201).send(await this.usersService.create(createUserDto));
     } catch (error) {
       res.status(404).send({ message: 'Erro ao criar usuário' });
     }
@@ -72,7 +72,8 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response): Promise<void> {
     try {
-      res.send(await this.usersService.remove(id));
+      await this.usersService.remove(id);
+      res.status(204).send();
     } catch (error) {
       res.status(404).send({ message: 'Usuário não encontrado' });
     }
