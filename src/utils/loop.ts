@@ -7,7 +7,7 @@ class Loop {
     setTimeout(() => this.function2(), 600000);
     this.countTime += 10;
     try {
-      console.log(await api.get('/'));
+      console.log((await api.get('/')).data);
     } catch (error) {
       console.log('error', error);
     }
@@ -17,7 +17,7 @@ class Loop {
     setTimeout(() => this.function1(), 600000);
     this.countTime += 10;
     try {
-      console.log(await api.get('/'));
+      console.log((await api.get('/')).data);
     } catch (error) {
       console.log('error', error);
     }
