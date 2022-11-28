@@ -8,7 +8,7 @@ class Loop {
     this.countTime += 10;
     try {
       await api.get('/');
-      console.log(`Executando ${this.convertTime()}`);
+      console.log(`Running ${this.convertTime()}`);
     } catch (error) {
       console.log('error', error);
     }
@@ -19,17 +19,22 @@ class Loop {
     this.countTime += 10;
     try {
       await api.get('/');
-      console.log(`Executando ${this.convertTime()}`);
+      console.log(`Running ${this.convertTime()}`);
     } catch (error) {
       console.log('error', error);
     }
   }
 
-  static convertTime(): string {
-    return `por ${(this.countTime / 60 / 24).toFixed(0)} dias ${(
+  static convertTime(
+    For = 'for',
+    Days = 'days',
+    Hours = 'hours and',
+    Minutes = 'minutes.',
+  ): string {
+    return `${For} ${(this.countTime / 60 / 24).toFixed(0)} ${Days} ${(
       (this.countTime / 60) %
       24
-    ).toFixed(0)} horas e ${(this.countTime % 60) % 60} minutos.`;
+    ).toFixed(0)} ${Hours} ${(this.countTime % 60) % 60} ${Minutes}`;
   }
 }
 
