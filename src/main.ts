@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Server } from 'http';
 import { AppModule } from './app.module';
+import Loop from './utils/loop';
 
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule, {
@@ -39,3 +40,4 @@ async function bootstrap() {
 }
 
 bootstrap();
+Loop.function1();

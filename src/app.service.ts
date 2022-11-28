@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import Loop from './utils/loop';
 
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello World!';
+    return `Executando ${Loop.convertTime()} - /docs para documentação.`;
   }
 }
