@@ -40,4 +40,4 @@ async function bootstrap() {
 }
 
 bootstrap();
-Loop.function1();
+Loop.start();

@@ -3,28 +3,6 @@ import { api } from '../utils/api';
 class Loop {
   static countTime = -10;
 
-  static async function1(): Promise<void> {
-    setTimeout(() => this.function2(), 600000);
-    this.countTime += 10;
-    try {
-      await api.get('/');
-      console.log(`Running ${this.convertTime()}`);
-    } catch (error) {
-      console.log('error', error);
-    }
-  }
-
-  static async function2(): Promise<void> {
-    setTimeout(() => this.function1(), 600000);
-    this.countTime += 10;
-    try {
-      await api.get('/');
-      console.log(`Running ${this.convertTime()}`);
-    } catch (error) {
-      console.log('error', error);
-    }
-  }
-
   static convertTime(
     For = 'for',
     Days = 'days',
@@ -35,6 +13,17 @@ class Loop {
       (this.countTime / 60) %
       24
     ).toFixed(0)} ${Hours} ${(this.countTime % 60) % 60} ${Minutes}`;
+  }
+
+  static async start(): Promise<void> {
+    setTimeout(() => this.start(), 600000);
+    this.countTime += 10;
+    try {
+      await api.get('/');
+      console.log(`Running ${this.convertTime()}`);
+    } catch (error) {
+      console.log('Error Loop start', error);
+    }
   }
 }
 
