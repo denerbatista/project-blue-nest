@@ -3,7 +3,7 @@ import Loop from './utils/loop';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
+  getStatus(): string {
     return `Executando ${Loop.convertTime()} - /docs para documentação.`;
   }
 }
