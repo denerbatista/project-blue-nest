@@ -3,32 +3,24 @@ import { api } from '../utils/api';
 class Loop {
   static countTime = -10;
 
-  static function1(): void {
+  static async function1(): Promise<void> {
     setTimeout(() => this.function2(), 600000);
     this.countTime += 10;
-    api
-      .get('/')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-    return console.log('tested');
+    try {
+      console.log(await api.get('/'));
+    } catch (error) {
+      console.log('error', error);
+    }
   }
 
-  static function2(): void {
+  static async function2(): Promise<void> {
     setTimeout(() => this.function1(), 600000);
     this.countTime += 10;
-    api
-      .get('/')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-    return console.log('tested');
+    try {
+      console.log(await api.get('/'));
+    } catch (error) {
+      console.log('error', error);
+    }
   }
 
   static convertTime(): string {
