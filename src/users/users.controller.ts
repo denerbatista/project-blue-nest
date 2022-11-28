@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IUser } from './entities/user.entity';
 import { Response } from 'express';
 
@@ -21,6 +21,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Cria um novo usuário',
+  })
   async create(
     @Body() createUserDto: CreateUserDto,
     @Res() res: Response,
@@ -33,6 +36,9 @@ export class UsersController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Retorna todos os usuários cadastrados',
+  })
   async findAll(@Res() res: Response): Promise<void> {
     try {
       res.send(await this.usersService.findAll());
@@ -42,6 +48,9 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Retorna um usuário por ID',
+  })
   async findOne(@Param('id') id: string, @Res() res: Response): Promise<void> {
     try {
       const user: IUser[] | [] = await this.usersService.verifyIdAndReturnUser(
@@ -57,6 +66,9 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Atualiza dados de um usuário por ID',
+  })
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -70,6 +82,9 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete um usuário por ID',
+  })
   async remove(@Param('id') id: string, @Res() res: Response): Promise<void> {
     try {
       await this.usersService.remove(id);

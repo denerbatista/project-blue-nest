@@ -8,7 +8,9 @@ import {
 } from 'class-validator';
 export class CreateUserDto {
   @IsEmail()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'user@mail.com',
+  })
   @Matches(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
     {
@@ -18,7 +20,7 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ example: 'name' })
   name: string;
 
   @IsString()
@@ -26,7 +28,11 @@ export class CreateUserDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'Senha muito fraca',
   })
-  @ApiProperty()
+  @ApiProperty({
+    example: '@Ab12345',
+    description:
+      'Senha deve conter 8 digitos, contendo: um simbolo, uma letra maiuscula e minuscula e um numero',
+  })
   password: string;
 
   @IsString()
@@ -34,7 +40,7 @@ export class CreateUserDto {
   @Matches(/^((\d{3}).(\d{3}).(\d{3})-(\d{2}))*$/, {
     message: 'cpf inválido',
   })
-  @ApiProperty()
+  @ApiProperty({ example: '123.456.789-00' })
   cpf: string;
 
   @IsBoolean()
