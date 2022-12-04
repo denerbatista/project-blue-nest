@@ -5,6 +5,8 @@ import { Server } from 'http';
 import { AppModule } from './app.module';
 import Loop from './utils/loop';
 
+export const port = process.env.PORT || 3000;
+
 async function bootstrap() {
   const app = await NestFactory.create<INestApplication>(AppModule, {
     cors: true,
@@ -25,12 +27,10 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document);
 
-  const port = process.env.PORT || 3000;
-
   const server: Server = await app.listen(port, () => {
     console.log(
       `Application running on ${
-        port === 3000 ? `http://localhost:${port}` : `port ${port}`
+        !process.env.PORT ? 'http://localhost:' + port : 'port ' + port
       }`,
     );
   });
