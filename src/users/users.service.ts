@@ -18,18 +18,10 @@ export class UsersService {
   };
 
   async create(createUserDto: CreateUserDto): Promise<IUser> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 8);
-
-    const data: CreateUserDto = {
-      name: createUserDto.name,
-      email: createUserDto.email,
-      password: hashedPassword,
-      cpf: createUserDto.cpf,
-      isAdmin: createUserDto.isAdmin,
-    };
+    createUserDto.password = await bcrypt.hash(createUserDto.password, 8);
 
     const newUser: IUser = await this.prisma.users.create({
-      data,
+      data: createUserDto,
       select: this.userSelect,
     });
 
@@ -53,7 +45,9 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    updateUserDto.password = await bcrypt.hash(updateUserDto.password, 8);
+    updateUserDto.password
+      ? (updateUserDto.password = await bcrypt.hash(updateUserDto.password, 8))
+      : null;
 
     return await this.prisma.users.update({
       where: { id },
