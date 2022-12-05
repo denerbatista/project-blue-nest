@@ -14,7 +14,7 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({
-    summary: 'Login',
+    summary: 'Login com cpf ou email',
     description: 'Response.token must be used to allow access',
   })
   async login(@Body() loginDto: LoginDto, @Res() res: Response): Promise<void> {

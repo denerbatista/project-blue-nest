@@ -5,10 +5,9 @@ import { Request, Response, NextFunction } from 'express';
 export class Logger implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const data = {
-      // method: req.method,
+      method: req.method,
       baseURL: req.baseUrl,
-      // header: req.headers.authorization,
-      // body: req.body,
+      host: req.headers.host,
       status: res.statusCode,
     };
     console.log(data);
