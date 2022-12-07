@@ -4,9 +4,12 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { Logger } from './utils/middleware.logDatabase';
+import { ProductsModule } from './products/products.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
-  imports: [UsersModule, AuthModule],
+  imports: [UsersModule, AuthModule, ProductsModule, FavoritesModule, ProfilesModule],
   controllers: [AppController],
   providers: [AppService],
 })

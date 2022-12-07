@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,13 +7,46 @@ generator client {
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model users {
-  id       String  @id @default(uuid())
-  email    String  @unique
+generator erd {
+  provider                  = "prisma-erd-generator"
+  theme                     = "dark"
+  includeRelationFromFields = true
+}
+
+model Users {
+  id       String     @id @default(uuid())
+  email    String     @unique
   name     String
   password String
-  cpf      String  @unique
-  isAdmin  Boolean
+  cpf      String     @unique
+  isAdmin  Boolean    @map("is_admin")
+  profiles Profiles[]
+}
+
+model Profiles {
+  id        String      @id @default(uuid())
+  title     String
+  imageUrl  String      @default("l1nq.com/image-url-default") @map("imagem_url")
+  user      Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String      @map("user_id")
+  favorites Favorites[]
+}
+
+model Products {
+  id          String      @id @default(uuid())
+  title       String      @unique
+  description String
+  image       String
+  score       String
+  favorites   Favorites[]
+}
+
+model Favorites {
+  id        String     @id @default(uuid())
+  profile   Profiles   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String     @map("profile_id")
+  products  Products[]
 }

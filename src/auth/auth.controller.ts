@@ -1,11 +1,17 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { LoggedUser } from './loggeduser.decorator';
 import { IUser } from 'src/users/entities/user.entity';
 import { Response } from 'express';
+import { ResponseLoginDto } from './dto/responseLogin.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -13,6 +19,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiCreatedResponse({
+    description: 'Objeto com token e dados do usuário',
+    type: ResponseLoginDto,
+  })
   @ApiOperation({
     summary: 'Login com cpf ou email',
     description: 'Response.token must be used to allow access',
