@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -8,7 +16,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { LoggedUser } from './loggeduser.decorator';
+import { LoggedUser } from './decorators/loggeduser.decorator';
 import { IUser } from 'src/users/entities/user.entity';
 import { Response } from 'express';
 import { ResponseLoginDto } from './dto/responseLogin.dto';
@@ -27,12 +35,13 @@ export class AuthController {
     summary: 'Login com cpf ou email',
     description: 'Response.token must be used to allow access',
   })
-  async login(@Body() loginDto: LoginDto, @Res() res: Response): Promise<void> {
+  async login(@Body() loginDto: LoginDto): Promise<ResponseLoginDto> {
     try {
-      const response = await this.authService.login(loginDto);
-      res.send(response);
+      const response: ResponseLoginDto = await this.authService.login(loginDto);
+      delete response.user.password;
+      return response;
     } catch (error) {
-      res.status(error.response.statusCode).send(error.response);
+      throw new UnauthorizedException('Erro ao logar');
     }
   }
 

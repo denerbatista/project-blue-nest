@@ -9,7 +9,13 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, ProductsModule, FavoritesModule, ProfilesModule],
+  imports: [
+    UsersModule,
+    AuthModule,
+    ProductsModule,
+    FavoritesModule,
+    ProfilesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

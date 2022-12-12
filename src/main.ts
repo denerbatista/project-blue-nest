@@ -21,8 +21,11 @@ async function bootstrap() {
     .addTag('Status')
     .addTag('Auth')
     .addTag('Users')
-    .addServer('https://project-blue-nest.onrender.com')
-    .addServer('http://localhost:3000')
+    .addTag('Profiles')
+    .addTag('Products')
+    .addTag('Favorites')
+    .addServer('https://project-blue-nest.onrender.com', 'Produção')
+    .addServer('http://localhost:3000', 'Local')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

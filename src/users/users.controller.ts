@@ -16,6 +16,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IUser } from './entities/user.entity';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthorizedUser } from 'src/auth/decorators/authorizedUser.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -65,14 +66,14 @@ export class UsersController {
 
       user.length > 0
         ? res.send(user)
-        : res.status(404).send({ message: 'Usuário não encontrado' });
+        : res.status(400).send({ message: 'Usuário não encontrado' });
     } catch (error) {
-      res.status(404).send({ message: 'Usuário não encontrado' });
+      res.status(400).send({ message: 'Usuário não encontrado' });
     }
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), AuthorizedUser)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Atualiza dados de um usuário por ID',
@@ -85,12 +86,12 @@ export class UsersController {
     try {
       res.send(await this.usersService.update(id, updateUserDto));
     } catch (error) {
-      res.status(404).send({ message: 'Usuário não encontrado' });
+      res.status(400).send({ message: 'Usuário não encontrado' });
     }
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), AuthorizedUser)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete um usuário por ID',
@@ -100,7 +101,7 @@ export class UsersController {
       await this.usersService.remove(id);
       res.status(204).send();
     } catch (error) {
-      res.status(404).send({ message: 'Usuário não encontrado' });
+      res.status(400).send({ message: 'Usuário não encontrado' });
     }
   }
 }
