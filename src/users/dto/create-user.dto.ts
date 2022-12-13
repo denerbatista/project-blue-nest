@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEmail,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 export class CreateUserDto {
   @IsEmail({
     message: 'Email inválido',
@@ -37,8 +31,4 @@ export class CreateUserDto {
   })
   @ApiProperty({ example: '123.456.789-00' })
   cpf: string;
-
-  @IsBoolean({ message: 'Este valor deve ser true ou false' })
-  @ApiProperty({ example: 'false' })
-  isAdmin: boolean;
 }

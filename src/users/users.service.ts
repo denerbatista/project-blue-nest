@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUser } from 'src/users/entities/user.entity';
@@ -21,7 +21,7 @@ export class UsersService {
     createUserDto.password = await bcrypt.hash(createUserDto.password, 8);
 
     const newUser: IUser = await this.prisma.users.create({
-      data: createUserDto,
+      data: { ...createUserDto, isAdmin: false },
       select: this.userSelect,
     });
 
@@ -44,10 +44,20 @@ export class UsersService {
     return response;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
     updateUserDto.password
       ? (updateUserDto.password = await bcrypt.hash(updateUserDto.password, 8))
       : null;
+
+    switch (updateUserDto.isAdmin !== undefined) {
+      case true:
+        switch (user.isAdmin) {
+          case false:
+            throw new UnauthorizedException(
+              'Usuario não autorizado para alterar isAdmin',
+            );
+        }
+    }
 
     return await this.prisma.users.update({
       where: { id },

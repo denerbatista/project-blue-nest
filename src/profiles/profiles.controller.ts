@@ -6,39 +6,85 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
-import { ProfilesService } from './profiles.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ProfilesService } from './profiles.service';
+import { AuthGuard } from '@nestjs/passport';
+import { IsAdmin } from 'src/auth/decorators/isAdmin.decorator';
 
 @ApiTags('Profiles')
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 @Controller('profiles')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profilesService.create(createProfileDto);
+  @ApiOperation({
+    summary: 'Cria um novo perfil de usuário',
+  })
+  async create(@Body() dto: CreateProfileDto) {
+    try {
+      return await this.profilesService.create(dto);
+    } catch (error) {
+      throw new BadRequestException('Erro ao criar perfil');
+    }
   }
 
   @Get()
-  findAll() {
-    return this.profilesService.findAll();
+  @ApiOperation({
+    summary: 'Lista todos os perfis',
+  })
+  @UseGuards(IsAdmin)
+  async findAll() {
+    try {
+      return await this.profilesService.findAll();
+    } catch (error) {
+      throw new BadRequestException('Erro ao lista perfis');
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profilesService.findOne(+id);
+  @ApiOperation({
+    summary: 'Lista um perfil por ID',
+  })
+  @UseGuards(IsAdmin)
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.profilesService.findOne(id);
+    } catch (error) {
+      throw new BadRequestException('Erro ao buscar perfil');
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profilesService.update(+id, updateProfileDto);
+  @ApiOperation({
+    summary: 'Atualiza dados do perfil',
+  })
+  async update(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
+    try {
+      return await this.profilesService.update(id, dto);
+    } catch (error) {
+      throw new BadRequestException('Erro ao atualizar perfil');
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profilesService.remove(+id);
+  @ApiOperation({
+    summary: 'Deleta um Profile por ID',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.profilesService.remove(id);
+    } catch (error) {
+      throw new BadRequestException('Erro ao deletar perfil');
+    }
   }
 }

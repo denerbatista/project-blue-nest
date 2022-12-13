@@ -17,6 +17,7 @@ import { IUser } from './entities/user.entity';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthorizedUser } from 'src/auth/decorators/authorizedUser.decorator';
+import { LoggedUser } from 'src/auth/decorators/loggeduser.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -81,10 +82,11 @@ export class UsersController {
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @LoggedUser() user: IUser,
     @Res() res: Response,
   ): Promise<void> {
     try {
-      res.send(await this.usersService.update(id, updateUserDto));
+      res.send(await this.usersService.update(id, updateUserDto, user));
     } catch (error) {
       res.status(400).send({ message: 'Usuário não encontrado' });
     }
