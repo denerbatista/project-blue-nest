@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { Favorite } from './entities/favorite.entity';
+import { FavoriteProductDto } from './dto/favorite.product.dto';
+import { DislikeProductDto } from './dto/dislike.product.dto';
 
 @Injectable()
 export class FavoritesService {
-  create(createFavoriteDto: CreateFavoriteDto) {
-    return 'This action adds a new favorite';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async verifyIdAndReturnProductFav(favoriteId: string): Promise<Favorite> {
+    const favorite: Favorite | null = await this.prisma.favorites.findUnique({
+      where: { id: favoriteId },
+    });
+
+    return favorite;
   }
 
-  findAll() {
-    return `This action returns all favorites`;
+  async favoriteProduct(dto: FavoriteProductDto): Promise<Favorite> {
+    const data: Prisma.FavoritesCreateInput = {
+      profile: {
+        connect: {
+          id: dto.profileId,
+        },
+      },
+      products: {
+        connect: {
+          id: dto.products,
+        },
+      },
+    };
+    return await this.prisma.favorites.create({
+      data,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} favorite`;
+  async getProfileFavorites(id: string): Promise<Favorite[]> {
+    return await this.prisma.favorites.findMany({
+      where: { profileId: id },
+      include: { products: true },
+    });
   }
 
-  update(id: number, updateFavoriteDto: UpdateFavoriteDto) {
-    return `This action updates a #${id} favorite`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} favorite`;
+  async dislikeProduct({ favoriteId }: DislikeProductDto): Promise<Favorite> {
+    return this.prisma.favorites.delete({
+      where: { id: favoriteId },
+    });
   }
 }
