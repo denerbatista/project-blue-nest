@@ -18,7 +18,7 @@ export class CreateProductDto {
 
   @ApiProperty({
     description: 'Descrição do produto',
-    example: 'Fruta amarela rica em potácio',
+    example: 'Fruta amarela rica em potássio',
   })
   @IsString()
   description: string;
