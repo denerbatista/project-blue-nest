@@ -28,7 +28,7 @@
 
 ## Relationship table
 
-<img src="https://raw.githubusercontent.com/denerbatista/project-blue-nest/f9b18692c9d8795bfa17b03e7c5e44863ff95399/prisma/ERD.svg"/>
+<img src="https://raw.githubusercontent.com/denerbatista/project-blue-nest/f9b18692c9d8795bfa17b03e7c5e44863ff95399/prisma/ERD.svg" width="170"/>
 
 ## Installation
 
