@@ -26,6 +26,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Relationship table
+
+<img src="C:\projetos\project-blue-nest\prisma\ERD.svg"/>
+
 ## Installation
 
 ```bash
