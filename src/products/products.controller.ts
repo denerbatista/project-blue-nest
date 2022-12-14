@@ -21,7 +21,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @ApiTags('Products')
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), IsAdmin)
+@UseGuards(AuthGuard())
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
@@ -63,6 +63,7 @@ export class ProductsController {
   }
 
   @Patch(':id')
+  @UseGuards(IsAdmin)
   @ApiOperation({
     summary: 'Atualize um produto por ID',
   })
@@ -79,6 +80,7 @@ export class ProductsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(IsAdmin)
   @ApiOperation({
     summary: 'Delete um produto por ID',
   })

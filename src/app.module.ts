@@ -7,6 +7,7 @@ import { Logger } from './utils/middleware.logDatabase';
 import { ProductsModule } from './products/products.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ProfilesModule } from './profiles/profiles.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProfilesModule } from './profiles/profiles.module';
     ProductsModule,
     FavoritesModule,
     ProfilesModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
